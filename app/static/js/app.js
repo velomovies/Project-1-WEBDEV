@@ -1,20 +1,19 @@
 (function () {
   "use strict"
 
-  console.log = () => {
-    setTimeout(() => {
-      document.querySelectorAll('*').forEach((kasa) => {
-        kasa.style.background = 'red'
-        kasa.style.borderColor = 'blue'
-        kasa.style.color = 'yellow'
-        kasa.style.filter = 'hue-rotate(180deg) grayscale(1) sepia(100%) blur(10px)'
-      })
-    }, 5000) 
-  }
+  // console.log = () => {
+  //   setTimeout(() => {
+  //     document.querySelectorAll('*').forEach((kasa) => {
+  //       kasa.style.background = 'red'
+  //       kasa.style.borderColor = 'blue'
+  //       kasa.style.color = 'yellow'
+  //       kasa.style.filter = 'hue-rotate(180deg) grayscale(1) sepia(100%) blur(10px)'
+  //     })1
+  //   }, 5000) 
+  // }
   const app = {
     init: function () {
       location.hash = ''
-      // utils.addHidden('.leaflet-bottom')
       // Initialize the app and start router
       router.init()
 
@@ -32,6 +31,7 @@
           utils.removeHidden('.loader')
           api.getData(api.queryHome)
           .then(function (data) {
+            utils.selectionDate(data)
             render.init(data)
           })
           .then(function () {
@@ -56,8 +56,11 @@
             console.log('catched error: ' + error)
           })
         },
-        'refresh': function () {
+        'refreshPark': function () {
           routie('park')
+        },
+        'refreshHome': function () {
+          routie('home')
         },
         '': function () {
           routie('home')
@@ -161,12 +164,32 @@
       L.tileLayer.provider('CartoDB').addTo(map)
       this.setView(map)
       this.addPoints(map, data)
+      render.active.map = map
     }, 
     setView: function (map) {
-      map.setView([52.37, 4.888], 13)
+      map.setView([52.36, 4.888], 12)
     },
     addPoints: function (map, data) {
-      data.forEach(function (item) {
+
+      let filteredData = data
+
+      if (render.active.selectedDate) {
+        if (render.active.selectedDate == "Alles") {
+          filteredData = data
+        } else {
+          filteredData = data.filter(function (item) {
+          if (item.date) {
+            return item.date.value == render.active.selectedDate
+          } else if (render.active.selectedDate == '????') {
+            return item
+          }
+        })
+      }
+      } else {
+        filteredData = data
+      }
+
+      filteredData.forEach(function (item) {
         const geojson = Terraformer.WKT.parse(item.wkt.value)
         geojson.name = item.ALstreetLabel.value
         geojson.uri = item.ALstreet.value.replace('https://adamlink.nl/geo/', '')
@@ -189,7 +212,7 @@
         'park': e.layer.feature.geometry.name,
         'map': map
       }
-      routie(`refresh`)
+      routie(`refreshPark`)
     },
     active: {}
   }
@@ -214,6 +237,23 @@
       })
       return dataImage
     },
+    selectDate: function (data) {
+      let dataDate = ['Alles', '????']
+      data.forEach(function (item) {
+        if(item.date) {
+          if(!dataDate.includes(item.date.value)) {
+            dataDate.push(item.date.value)
+          }    
+        }
+      })
+
+      let dataDateObj = dataDate.map(function (item) {
+        return { 
+          date: item
+        }
+      }) 
+      return dataDateObj
+    },
     renderDirectives: function () {
       const directives = {
         image: {
@@ -232,6 +272,23 @@
     },
     removeHidden: function (select) {
       document.querySelector(select).classList.remove('hidden')
+    },
+    selectionDate: function (data) {
+      document.querySelector('aside svg').addEventListener('click', function () {
+        template.render(data, '#selectDate', template.selectDate)
+        utils.removeHidden('.selectDate')
+        utils.selectionDateLi()
+      })
+      
+    },
+    selectionDateLi: function () {
+      document.querySelectorAll('aside article ul li').forEach(function (element) {
+        element.addEventListener('click', function () {
+        render.active.selectedDate = this.innerHTML
+        utils.addHidden('.selectDate')
+        routie('refreshHome')
+      })
+    })
     }
   }
 

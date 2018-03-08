@@ -1,23 +1,50 @@
+:root {
+  --main-black: #000000;
+  --main-gray: #9a9a9a;
+  --main-white: #ffffff;
+  --white-trans: #ffffffaa;
+  --black-trans: #000000aa;
+  --black-fulltrans: #00000000;
+  --highlight: #5296A5;
+  --highlight-trans: #5296A544;
+}
+
+/* GENERAL */
+
 body {
   margin: 0;
   font-family: avenir, sans-serif;
+  overflow-y: hidden;
 }
 
 section {
   width: 100%;
 }
 
+ul {
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  list-style: none;
+  padding: 0;
+}
+
+/* MAP */
+
 #mapid { 
   height: 100vh; 
   overflow: hidden;
 }
 
+/* DETAILPAGE */
+
 .park {
   position: absolute;
   bottom: 0;
-  background-color:#ffffffaa;
-  background-image: url(static/images/loader.gif);
-  z-index: 998;
+  background-color: var(--white-trans);
+  z-index: 990;
   overflow: hidden;
 }
 
@@ -34,7 +61,7 @@ section {
   position: absolute;
   content: 'Parknaam:';
   top: .6em;
-  color: #9a9a9a;
+  color: var(--main-gray);
   font-size: .5em;
 }
 
@@ -42,7 +69,7 @@ section {
   position: absolute;
   content: 'Datum van oprichting:';
   top: .6em;
-  color: #9a9a9a;
+  color: var(--main-gray);
   font-size: .5em;
 }
 
@@ -52,24 +79,16 @@ section {
   top: .6em;
   font-family: Avenir, sans-serif;
   font-weight: light;
-  color: #9a9a9a;
+  color: var(--main-gray);
   text-decoration: none;
   font-size: 2em;
   transition: all .3s
 }
 
 .parkInfo a:hover {
-  color: #000000;
+  color: var(--main-black);
   transform: scale(1.1);
 }
-
-/* .parkInfo a:before {
-  position: absolute;
-  content: 'sluiten';
-  top: .6em;
-  color: #9a9a9a;
-  font-size: .5em;
-} */
 
 .park div.images {
   overflow-x: scroll;
@@ -100,33 +119,10 @@ section {
   padding: 1em .5em;
   transform: translateY(200%);
   transition: transform .3s;
-  background: linear-gradient(#00000000, #000000aa, #000000aa);
-  color: #ffffff;
+  background: linear-gradient(var(--black-fulltrans), var(--black-trans));
+  color: var(--main-white);
   animation: addWidth 1s forwards;
 }
-
-@keyframes addWidth {
-  0% {
-    max-width: 0%;
-    opacity: 0;
-  }
-  80% {
-    max-width: 0%;
-    opacity: 0;
-  }
-  100% {
-    max-width: 100%;
-    opacity: 1;
-  }
-}
-
-/* .park div div h1:after {
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  
-} */
 
 .park div div:hover h1 {
   transform: translateY(0);
@@ -148,9 +144,57 @@ section {
   width: 5%;
 }
 
+/* ASIDE */
+
+aside {
+  fill: var(--highlight);
+  border-radius: .5em;
+  position: fixed;
+  z-index: 997;
+  right: .5em;
+  top: .5em;
+  transition: all .3s;
+}
+
+aside svg {
+  padding-left: .5em;
+  border-left: .1em solid var(--main-gray);
+  cursor: pointer;
+}
+
+aside svg:hover {
+  fill: var(--highlight-trans);
+}
+
+aside article {
+  display: grid;
+  background: var(--main-white);
+  position: absolute;
+  right: 0;
+  max-height: 50vh;
+  overflow-y: scroll;
+  box-shadow: .05em .05em .5em var(--main-black-trans);
+}
+
+aside article li {
+  padding: 1em 2em;
+  white-space: nowrap;
+  user-select: none;
+  cursor: pointer;
+  transition: all .3s;
+}
+
+aside article li:hover {
+  background: var(--main-gray);
+}
+
+/* HIDDEN */
+
 .hidden {
   display: none;
 }
+
+/* MEDIAQUERY */
 
 @media (max-width: 40em) {
   .park div div h1 {
@@ -161,5 +205,25 @@ section {
   }
   .parkInfo h2:before {
     top: 8.6em;
+  }
+  .park div div {
+    height: 10em;
+  }
+}
+
+/* ANIMATIONS */
+
+@keyframes addWidth {
+  0% {
+    max-width: 0%;
+    opacity: 0;
+  }
+  80% {
+    max-width: 0%;
+    opacity: 0;
+  }
+  100% {
+    max-width: 100%;
+    opacity: 1;
   }
 }
