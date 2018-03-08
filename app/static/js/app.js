@@ -1,3 +1,7 @@
+// TO DO
+// New icons
+// optimalize code
+
 (function () {
   "use strict"
 
@@ -16,7 +20,6 @@
       location.hash = ''
       // Initialize the app and start router
       router.init()
-
     }
   }
 
@@ -191,6 +194,21 @@
 
       filteredData.forEach(function (item) {
         const geojson = Terraformer.WKT.parse(item.wkt.value)
+        let geoArray = []
+        if (geojson.type == 'MultiLineString' || geojson.type == 'Polygon') {
+          geojson.coordinates[0][0].forEach(function (item) {
+            geojson.type = 'Point'
+            geoArray.push(item)
+            geojson.coordinates = geoArray
+          })
+        } else if (geojson.type == 'LineString') {
+          geojson.coordinates[0].forEach(function (item) {
+            geojson.type = 'Point'
+            geoArray.push(item)
+            geojson.coordinates = geoArray
+          })
+        } 
+
         geojson.name = item.ALstreetLabel.value
         geojson.uri = item.ALstreet.value.replace('https://adamlink.nl/geo/', '')
         if(item.date) {

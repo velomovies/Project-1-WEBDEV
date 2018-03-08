@@ -116,7 +116,7 @@ li {
   align-content: flex-end;
   position: relative;
   margin: 0;
-  padding: 1em .5em;
+  padding: .5em;
   transform: translateY(200%);
   transition: transform .3s;
   background: linear-gradient(var(--black-fulltrans), var(--black-trans));
@@ -202,9 +202,10 @@ aside article li:hover {
   }
   .parkInfo {
     grid-template-columns: 1fr;
+    grid-gap: 0;
   }
   .parkInfo h2:before {
-    top: 8.6em;
+    top: 6.6em;
   }
   .park div div {
     height: 10em;
