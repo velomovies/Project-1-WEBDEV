@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="static/css/style.css">
+    <title>Parken & Plantsoenen</title>
+  </head>
+
+  <body>
+
+    <section id="home">
+        <div id="mapid"></div>   
+    </section>
+
+    <section id="park">
+      <a href="#home">Home</a>
+      <h1 data-bind="title"></h1>
+      <div id="images" class="images">
+          <h1 data-bind="park"></h1>
+          <img data-bind="image" src="" alt="">
+      </div>    
+    </section>
+
+      
+    
+  </body>
+
+  <!-- libraries -->
+  <script src="static/js/libraries/routie.js"></script>
+  <script src="static/js/libraries/transparency.js"></script>
+  <script src="static/js/libraries/leaflet.js"></script>
+  <script src="static/js/libraries/leaflet-providers.js"></script>
+  <script src="static/js/libraries/terraformer.js"></script>
+  <script src="static/js/libraries/terraformer-wkt-parser.js"></script>
+ 
+  <!-- app -->
+  <script src="static/js/app.js"></script>
+  
+</html>
