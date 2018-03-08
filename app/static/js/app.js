@@ -1,9 +1,20 @@
 (function () {
   "use strict"
 
+  console.log = () => {
+    setTimeout(() => {
+      document.querySelectorAll('*').forEach((kasa) => {
+        kasa.style.background = 'red'
+        kasa.style.borderColor = 'blue'
+        kasa.style.color = 'yellow'
+        kasa.style.filter = 'hue-rotate(180deg) grayscale(1) sepia(100%) blur(10px)'
+      })
+    }, 5000) 
+  }
   const app = {
     init: function () {
       location.hash = ''
+      // utils.addHidden('.leaflet-bottom')
       // Initialize the app and start router
       router.init()
 
@@ -17,23 +28,29 @@
           if(render.active.map) {
             render.active.map.remove()
           }
-          console.log('home')
+          utils.addHidden('.park')
+          utils.removeHidden('.loader')
           api.getData(api.queryHome)
           .then(function (data) {
-            console.log(data)
             render.init(data)
+          })
+          .then(function () {
+            utils.addHidden('.loader')
           })
           .catch(function (error) {
             console.log('catched error: ' + error)
           })
         },
         'park': function () {
-          console.log('doe het!', render.active)
+          utils.removeHidden('.loader')
           api.getData(api.queryPark, render.active)
           .then(function (data) {
-            console.log(data)
-            template.render(data, '#park', template.park)
+            template.render(data, '#parkInfo', template.park)
             template.render(data, '#images', template.parkImage)
+          })
+          .then(function () {
+            utils.removeHidden('.park')
+            utils.addHidden('.loader')
           })
           .catch(function (error) {
             console.log('catched error: ' + error)
@@ -52,7 +69,6 @@
   const api = {
     getData: function (query, parkLink) {
       return new Promise(function (resolve, reject) {
-          // When there is no localStorage and the user has not been at the website before it request the data from the api
           api.requestData(resolve, reject, query, parkLink)
       })
 
@@ -133,7 +149,8 @@
         ?bbitem foaf:depiction ?imgurl .
         ?bbitem dc:type ?type .
         ?bbitem dc:title ?title .
-      }`
+      }
+      LIMIT 100`
       // dc:date dc:creator
     }
   }
@@ -151,7 +168,6 @@
     addPoints: function (map, data) {
       data.forEach(function (item) {
         const geojson = Terraformer.WKT.parse(item.wkt.value)
-        console.log(item)
         geojson.name = item.ALstreetLabel.value
         geojson.uri = item.ALstreet.value.replace('https://adamlink.nl/geo/', '')
         if(item.date) {
@@ -166,8 +182,7 @@
     },
     focus: function (map, e) {
       map.panTo(new L.LatLng(e.latlng.lat, e.latlng.lng))
-      map.setView([e.latlng.lat, e.latlng.lng], 24)
-      console.log(e)
+      map.setView([(e.latlng.lat - .0002), e.latlng.lng], 24)
       render.active = {
         'uri': e.layer.feature.geometry.uri,
         'date': e.layer.feature.geometry.date,
@@ -184,15 +199,14 @@
       Transparency.render(document.querySelector(route), template(data), this.renderDirectives())
     },
     park: function (data) {
-      console.log(render.active.park)
       return {
-        title: render.active.park
+        title: render.active.park,
+        date: render.active.date
       }
     },
     parkImage: function (data) {
       const dataImage = data
       .map(function (item) {
-        console.log(item.imgurl.value, render.active)
         return {
           park: item.title.value,
           imageUrl: item.imgurl.value
@@ -204,12 +218,20 @@
       const directives = {
         image: {
           src: function (params) {
-            console.log('werkt!')
             return this.imageUrl
           }
         }
       }
     return directives
+    }
+  }
+
+  const utils = {
+    addHidden: function (select) {
+      document.querySelector(select).classList.add('hidden')
+    },
+    removeHidden: function (select) {
+      document.querySelector(select).classList.remove('hidden')
     }
   }
 

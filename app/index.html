@@ -15,16 +15,23 @@
         <div id="mapid"></div>   
     </section>
 
-    <section id="park">
-      <a href="#home">Home</a>
-      <h1 data-bind="title"></h1>
+    <section class="park" id="park">
+      <div class="parkInfo" id="parkInfo">       
+        <h1 data-bind="title"></h1>
+        <h2 data-bind="date"></h2>
+        <a href="#home">X</a>
+      </div>
       <div id="images" class="images">
+        <div>
           <h1 data-bind="park"></h1>
           <img data-bind="image" src="" alt="">
+        </div>
       </div>    
     </section>
 
-      
+    <section class="loader" id="loader">
+        <img data-bind="image" src="static/images/loader.gif" alt="loader">
+    </section>
     
   </body>
 

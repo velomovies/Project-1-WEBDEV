@@ -1,7 +1,165 @@
 body {
   margin: 0;
+  font-family: avenir, sans-serif;
+}
+
+section {
+  width: 100%;
 }
 
 #mapid { 
   height: 100vh; 
+  overflow: hidden;
+}
+
+.park {
+  position: absolute;
+  bottom: 0;
+  background-color:#ffffffaa;
+  background-image: url(static/images/loader.gif);
+  z-index: 998;
+  overflow: hidden;
+}
+
+.parkInfo {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  grid-gap: 2em;
+  align-items: center;
+  justify-content: start;
+  padding: .5em 1em;
+}
+
+.parkInfo h1:before {
+  position: absolute;
+  content: 'Parknaam:';
+  top: .6em;
+  color: #9a9a9a;
+  font-size: .5em;
+}
+
+.parkInfo h2:before {
+  position: absolute;
+  content: 'Datum van oprichting:';
+  top: .6em;
+  color: #9a9a9a;
+  font-size: .5em;
+}
+
+.parkInfo a {
+  position: absolute;
+  right: 1em;
+  top: .6em;
+  font-family: Avenir, sans-serif;
+  font-weight: light;
+  color: #9a9a9a;
+  text-decoration: none;
+  font-size: 2em;
+  transition: all .3s
+}
+
+.parkInfo a:hover {
+  color: #000000;
+  transform: scale(1.1);
+}
+
+/* .parkInfo a:before {
+  position: absolute;
+  content: 'sluiten';
+  top: .6em;
+  color: #9a9a9a;
+  font-size: .5em;
+} */
+
+.park div.images {
+  overflow-x: scroll;
+  display: grid;
+  grid-auto-flow: column;
+}
+
+.park div div {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr;
+  overflow: hidden;
+  height: 20em;
+  width: 100%;
+}
+
+.park div div h1,
+.park div div img {
+  grid-column: 1 / -1;
+  grid-row: 1 / -1;
+}
+
+.park div div h1 {
+  display: grid;
+  align-content: flex-end;
+  position: relative;
+  margin: 0;
+  padding: 1em .5em;
+  transform: translateY(200%);
+  transition: transform .3s;
+  background: linear-gradient(#00000000, #000000aa, #000000aa);
+  color: #ffffff;
+  animation: addWidth 1s forwards;
+}
+
+@keyframes addWidth {
+  0% {
+    max-width: 0%;
+    opacity: 0;
+  }
+  80% {
+    max-width: 0%;
+    opacity: 0;
+  }
+  100% {
+    max-width: 100%;
+    opacity: 1;
+  }
+}
+
+/* .park div div h1:after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  
+} */
+
+.park div div:hover h1 {
+  transform: translateY(0);
+}
+
+.park div div img {
+  height: 100%;
+}
+
+#loader {
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%);
+  position: absolute;
+  z-index: 999;
+}
+
+#loader img {
+  width: 5%;
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 40em) {
+  .park div div h1 {
+    transform: translateY(0);
+  }
+  .parkInfo {
+    grid-template-columns: 1fr;
+  }
+  .parkInfo h2:before {
+    top: 8.6em;
+  }
 }
