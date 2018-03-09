@@ -11,6 +11,12 @@
 
 /* GENERAL */
 
+select {
+  position: absolute;
+  top: 0;
+  z-index: 999;
+}
+
 body {
   margin: 0;
   font-family: avenir, sans-serif;
@@ -158,7 +164,7 @@ aside {
 
 aside svg {
   padding-left: .5em;
-  border-left: .1em solid var(--main-gray);
+  /* border-left: .1em solid var(--main-gray); */
   cursor: pointer;
 }
 

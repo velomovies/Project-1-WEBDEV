@@ -168,6 +168,8 @@
       this.setView(map)
       this.addPoints(map, data)
       render.active.map = map
+
+      
     }, 
     setView: function (map) {
       map.setView([52.36, 4.888], 12)
@@ -216,14 +218,34 @@
         } else {
           geojson.date = '????'
         }
-        L.geoJSON(geojson).addTo(map).on('click', function (e) {
+        console.log(geojson)
+
+        // Custom marker used for the map
+        let leafIcon = L.icon({
+          iconUrl: 'static/images/park-icon.png',
+          shadowUrl: 'static/images/park-shadow.png',
+      
+          iconSize:     [44, 70,7], // size of the icon
+          shadowSize:   [51, 65], // size of the shadow
+          iconAnchor:   [23, 69], // point of the icon which will correspond to marker's location
+          shadowAnchor: [4, 62],  // the same for the shadow
+          popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+      })
+
+        L.geoJSON(geojson, { 
+          pointToLayer: function(feature, latlng) {
+          return L.marker(latlng, {
+              icon: leafIcon
+          })
+        } 
+      }).addTo(map).on('click', function (e) {
           render.focus(map, e)
         })
       })
     },
     focus: function (map, e) {
       map.panTo(new L.LatLng(e.latlng.lat, e.latlng.lng))
-      map.setView([(e.latlng.lat - .0002), e.latlng.lng], 24)
+      map.setView([(e.latlng.lat - .0002), e.latlng.lng], 20)
       render.active = {
         'uri': e.layer.feature.geometry.uri,
         'date': e.layer.feature.geometry.date,
@@ -231,6 +253,9 @@
         'map': map
       }
       routie(`refreshPark`)
+    },
+    icon: function () {
+     
     },
     active: {}
   }
