@@ -229,22 +229,10 @@
           geojson.date = '????'
         }
 
-        // Custom marker used for the map
-        let leafIcon = L.icon({
-          iconUrl: 'static/images/park-icon.png',
-          shadowUrl: 'static/images/park-shadow.png',
-      
-          iconSize:     [44, 70,7], // size of the icon
-          shadowSize:   [51, 65], // size of the shadow
-          iconAnchor:   [23, 69], // point of the icon which will correspond to marker's location
-          shadowAnchor: [4, 62],  // the same for the shadow
-          popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
-        })
-
         L.geoJSON(geojson, { 
           pointToLayer: function(feature, latlng) {
           return L.marker(latlng, {
-              icon: leafIcon
+              icon: render.leafIcon('')
           })
         } 
       }).addTo(map).on('click', function (e) {
@@ -255,18 +243,7 @@
     // When clicked on map the focus goes to that certain place
     focus: function (map, e) {
       // Custom marker when clicked on a certain point in the map
-      let leafIconActive = L.icon({
-        iconUrl: 'static/images/park-icon-active.png',
-        shadowUrl: 'static/images/park-shadow.png',
-    
-        iconSize:     [44, 70,7], // size of the icon
-        shadowSize:   [51, 65], // size of the shadow
-        iconAnchor:   [23, 69], // point of the icon which will correspond to marker's location
-        shadowAnchor: [4, 62],  // the same for the shadow
-        popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
-      })
-      
-      e.layer.setIcon(leafIconActive)
+      e.layer.setIcon(render.leafIcon('-active'))
 
       map.panTo(new L.LatLng(e.latlng.lat, e.latlng.lng))
       map.setView([(e.latlng.lat - .0002), e.latlng.lng], 20)
@@ -277,6 +254,19 @@
         'map': map
       }
       routie(`refreshPark`)
+    },
+    leafIcon: function (active) {
+      let leafIcon = L.icon({
+        iconUrl: `static/images/park-icon${active}.png`,
+        shadowUrl: 'static/images/park-shadow.png',
+    
+        iconSize:     [44, 70,7], // size of the icon
+        shadowSize:   [51, 65], // size of the shadow
+        iconAnchor:   [23, 69], // point of the icon which will correspond to marker's location
+        shadowAnchor: [4, 62],  // the same for the shadow
+        popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+      })
+      return leafIcon
     },
     active: {}
   }
