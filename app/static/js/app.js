@@ -1,10 +1,15 @@
-// TO DO
-// New icons
-// optimalize code
+// Uses routie by Greg Allen (http://projects.jga.me/routie/) for routing 
+// &
+// Uses transparancy by Leonidas (http://leonidas.github.com/transparency/) for templating
+// &
+// Uses leafletjs by Vladimir Agafonkin (http://leafletjs.com/) for rendering a map
+// & 
+// Uses Terraformer by Esri (https://github.com/Esri/terraformer) for making usable geojson
 
 (function () {
   "use strict"
 
+  // if you want to troll your friend on console.log
   // console.log = () => {
   //   setTimeout(() => {
   //     document.querySelectorAll('*').forEach((kasa) => {
@@ -15,6 +20,7 @@
   //     })1
   //   }, 5000) 
   // }
+
   const app = {
     init: function () {
       location.hash = ''
@@ -24,6 +30,7 @@
   }
 
   const router = {
+    // On hash change the right function is started
     init: function () {
       routie({
         'home': function () {
@@ -73,12 +80,14 @@
   }
 
   const api = {
+    // Starts a promise to get data
     getData: function (query, parkLink) {
       return new Promise(function (resolve, reject) {
           api.requestData(resolve, reject, query, parkLink)
       })
 
     },
+    // Request the data with a query stated below
     requestData: function (resolve, reject, query, parkLink) {
       const encodedquery = encodeURIComponent(query(parkLink))
       
@@ -103,6 +112,7 @@
 
       request.send()
     },
+    // Two queries for getting the right data
     queryHome: function () {
       return `
       PREFIX dct: <http://purl.org/dc/terms/>
@@ -150,6 +160,7 @@
       PREFIX dct: <http://purl.org/dc/terms/>
       PREFIX foaf: <http://xmlns.com/foaf/0.1/>
       PREFIX dc: <http://purl.org/dc/elements/1.1/>
+
       SELECT ?imgurl ?type ?title WHERE {
         ?bbitem dct:spatial <https://adamlink.nl/geo/${parkLink.uri}> .
         ?bbitem foaf:depiction ?imgurl .
@@ -162,20 +173,19 @@
   }
 
   const render = {
+    // Renders the map with data thats requested above
     init: function (data) {
       let map = L.map('mapid')
       L.tileLayer.provider('CartoDB').addTo(map)
       this.setView(map)
       this.addPoints(map, data)
-      render.active.map = map
-
-      
+      render.active.map = map      
     }, 
     setView: function (map) {
       map.setView([52.36, 4.888], 12)
     },
     addPoints: function (map, data) {
-
+      // Filters data. It shows the right data that is selected by the user
       let filteredData = data
 
       if (render.active.selectedDate) {
@@ -193,7 +203,7 @@
       } else {
         filteredData = data
       }
-
+      // Makes all wkt data to points. That makes it easier to show
       filteredData.forEach(function (item) {
         const geojson = Terraformer.WKT.parse(item.wkt.value)
         let geoArray = []
@@ -218,7 +228,6 @@
         } else {
           geojson.date = '????'
         }
-        console.log(geojson)
 
         // Custom marker used for the map
         let leafIcon = L.icon({
@@ -230,7 +239,7 @@
           iconAnchor:   [23, 69], // point of the icon which will correspond to marker's location
           shadowAnchor: [4, 62],  // the same for the shadow
           popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
-      })
+        })
 
         L.geoJSON(geojson, { 
           pointToLayer: function(feature, latlng) {
@@ -243,7 +252,22 @@
         })
       })
     },
+    // When clicked on map the focus goes to that certain place
     focus: function (map, e) {
+      // Custom marker when clicked on a certain point in the map
+      let leafIconActive = L.icon({
+        iconUrl: 'static/images/park-icon-active.png',
+        shadowUrl: 'static/images/park-shadow.png',
+    
+        iconSize:     [44, 70,7], // size of the icon
+        shadowSize:   [51, 65], // size of the shadow
+        iconAnchor:   [23, 69], // point of the icon which will correspond to marker's location
+        shadowAnchor: [4, 62],  // the same for the shadow
+        popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+      })
+      
+      e.layer.setIcon(leafIconActive)
+
       map.panTo(new L.LatLng(e.latlng.lat, e.latlng.lng))
       map.setView([(e.latlng.lat - .0002), e.latlng.lng], 20)
       render.active = {
@@ -254,13 +278,11 @@
       }
       routie(`refreshPark`)
     },
-    icon: function () {
-     
-    },
     active: {}
   }
 
   const template = {
+    // Renders the right data. It shows all the photo's and loads a selection tool
     render: function (data, route, template) {
       Transparency.render(document.querySelector(route), template(data), this.renderDirectives())
     },
@@ -310,12 +332,14 @@
   }
 
   const utils = {
+    // Adds class to show or hide a section
     addHidden: function (select) {
       document.querySelector(select).classList.add('hidden')
     },
     removeHidden: function (select) {
       document.querySelector(select).classList.remove('hidden')
     },
+    // Loads the selection with the right data
     selectionDate: function (data) {
       document.querySelector('aside svg').addEventListener('click', function () {
         template.render(data, '#selectDate', template.selectDate)

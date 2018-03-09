@@ -5,8 +5,8 @@
   --white-trans: #ffffffaa;
   --black-trans: #000000aa;
   --black-fulltrans: #00000000;
-  --highlight: #5296A5;
-  --highlight-trans: #5296A544;
+  --highlight: #537a9f;
+  --highlight-trans: rgba(82, 150, 165, 0.267);
 }
 
 /* GENERAL */
@@ -138,18 +138,6 @@ li {
   height: 100%;
 }
 
-#loader {
-  top: 50%;
-  left: 50%;
-  transform: translateY(-50%);
-  position: absolute;
-  z-index: 999;
-}
-
-#loader img {
-  width: 5%;
-}
-
 /* ASIDE */
 
 aside {
@@ -157,15 +145,14 @@ aside {
   border-radius: .5em;
   position: fixed;
   z-index: 997;
-  right: .5em;
-  top: .5em;
+  right: 1em;
+  top: 1em;
   transition: all .3s;
 }
 
 aside svg {
-  padding-left: .5em;
-  /* border-left: .1em solid var(--main-gray); */
   cursor: pointer;
+
 }
 
 aside svg:hover {
@@ -192,6 +179,20 @@ aside article li {
 
 aside article li:hover {
   background: var(--main-gray);
+}
+
+/* Loader */
+
+#loader {
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%);
+  position: absolute;
+  z-index: 999;
+}
+
+#loader img {
+  width: 5%;
 }
 
 /* HIDDEN */
