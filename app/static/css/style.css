@@ -205,7 +205,8 @@ aside article li:hover {
 
 @media (max-width: 40em) {
   .park div div h1 {
-    transform: translateY(0);
+    transform: translateY(0); 
+    font-size: .8em;
   }
   .parkInfo {
     grid-template-columns: 1fr;
